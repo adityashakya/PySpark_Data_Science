@@ -73,7 +73,7 @@ stages.append(VectorAssembler(inputCols=['oh_s_gender','oh_s_geography','CreditS
 stages.append(MinMaxScaler(inputCol='features', outputCol='scaledfeatures'))
 
 # stage for MultilayerPerceptronClassifier(ANN implementation in Spark)
-layers = [13,5,5,2] # 13- input features, two hidden layers with 5 neurons, output layer with 2 neurons(for 2 o/p labels)
+layers = [13,6,6,6,2] # 13- input features, two hidden layers with 5 neurons, output layer with 2 neurons(for 2 o/p labels)
 stages.append(MultilayerPerceptronClassifier(labelCol="s_exited", featuresCol="scaledfeatures",
                                          maxIter=200, layers=layers))
 
@@ -95,7 +95,6 @@ predictions = model.transform(testData)
 # evaluating the model performance
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 
-evaluator = MulticlassClassificationEvaluator(labelCol='s_exited', predictionCol='prediction', metricName='accuracy')
+evaluator = MulticlassClassificationEvaluator(labelCol='s_exited',predictionCol='prediction', metricName='accuracy')
 accuracy = evaluator.evaluate(predictions)
 print("Accuracy  = %g and Test Error = %g"%(accuracy, 1-accuracy))
-
